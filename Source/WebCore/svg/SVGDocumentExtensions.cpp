@@ -322,8 +322,10 @@ void SVGDocumentExtensions::removeAllTargetReferencesForElement(SVGElement* refe
 {
     Vector<SVGElement*> toBeRemoved;
 
-    auto end = m_elementDependencies.end();
-    for (auto it = m_elementDependencies.begin(); it != end; ++it) {
+	HashMap<SVGElement*, OwnPtr<HashSet<SVGElement*>>, PtrHash<SVGElement*>, HashTraits<SVGElement*>, HashTraits<OwnPtr<
+		        HashSet<SVGElement*>>>>::iterator end = m_elementDependencies.end();
+    for (HashMap<SVGElement*, OwnPtr<HashSet<SVGElement*>>, PtrHash<SVGElement*>, HashTraits<SVGElement*>, HashTraits<
+	                 OwnPtr<HashSet<SVGElement*>>>>::iterator it = m_elementDependencies.begin(); it != end; ++it) {
         SVGElement* referencedElement = it->key;
         HashSet<SVGElement*>& referencingElements = *it->value;
         referencingElements.remove(referencingElement);

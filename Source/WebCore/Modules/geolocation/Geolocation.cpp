@@ -194,13 +194,13 @@ Geolocation::GeoNotifier* Geolocation::Watchers::find(int id)
 void Geolocation::Watchers::remove(int id)
 {
     ASSERT(id > 0);
-    if (auto notifier = m_idToNotifierMap.take(id))
+    if (RefPtr<GeoNotifier> notifier = m_idToNotifierMap.take(id))
         m_notifierToIdMap.remove(notifier);
 }
 
 void Geolocation::Watchers::remove(GeoNotifier* notifier)
 {
-    if (auto identifier = m_notifierToIdMap.take(notifier))
+    if (int identifier = m_notifierToIdMap.take(notifier))
         m_idToNotifierMap.remove(identifier);
 }
 

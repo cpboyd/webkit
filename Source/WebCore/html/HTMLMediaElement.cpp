@@ -541,7 +541,7 @@ void HTMLMediaElement::finishParsingChildren()
     if (!RuntimeEnabledFeatures::webkitVideoTrackEnabled())
         return;
 
-    auto trackDescendants = descendantsOfType<HTMLTrackElement>(this);
+	ElementDescendantIteratorAdapter<HTMLTrackElement> trackDescendants = descendantsOfType<HTMLTrackElement>(this);
     if (trackDescendants.begin() != trackDescendants.end())
         scheduleDelayedAction(ConfigureTextTracks);
 #endif
@@ -932,7 +932,7 @@ void HTMLMediaElement::selectMediaResource()
         // Otherwise, if the media element does not have a src attribute but has a source 
         // element child, then let mode be children and let candidate be the first such 
         // source element child in tree order.
-        auto source = childrenOfType<HTMLSourceElement>(this).begin();
+	    ElementChildIterator<HTMLSourceElement> source = childrenOfType<HTMLSourceElement>(this).begin();
         if (source != childrenOfType<HTMLSourceElement>(this).end()) {
             mode = children;
             m_nextChildNodeToConsider = &*source;
@@ -1423,8 +1423,8 @@ void HTMLMediaElement::textTrackModeChanged(TextTrack* track)
     bool trackIsLoaded = true;
     if (track->trackType() == TextTrack::TrackElement) {
         trackIsLoaded = false;
-        auto end = childrenOfType<HTMLTrackElement>(this).end();
-        for (auto trackElement = childrenOfType<HTMLTrackElement>(this).begin(); trackElement != end; ++trackElement) {
+	    ElementChildIterator<HTMLTrackElement> end = childrenOfType<HTMLTrackElement>(this).end();
+        for (ElementChildIterator<HTMLTrackElement> trackElement = childrenOfType<HTMLTrackElement>(this).begin(); trackElement != end; ++trackElement) {
             if (trackElement->track() == track) {
                 if (trackElement->readyState() == HTMLTrackElement::LOADING || trackElement->readyState() == HTMLTrackElement::LOADED)
                     trackIsLoaded = true;
@@ -1656,8 +1656,8 @@ void HTMLMediaElement::cancelPendingEventsAndCallbacks()
     LOG(Media, "HTMLMediaElement::cancelPendingEventsAndCallbacks");
     m_asyncEventQueue->cancelAllEvents();
 
-    auto sourceChildren = childrenOfType<HTMLSourceElement>(this);
-    for (auto source = sourceChildren.begin(), end = sourceChildren.end(); source != end; ++source)
+	ElementChildIteratorAdapter<HTMLSourceElement> sourceChildren = childrenOfType<HTMLSourceElement>(this);
+    for (ElementChildIterator<HTMLSourceElement> source = sourceChildren.begin(), end = sourceChildren.end(); source != end; ++source)
         source->cancelPendingErrorEvent();
 }
 

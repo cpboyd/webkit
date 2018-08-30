@@ -54,12 +54,14 @@ MapData::MapData(VM& vm, JSGlobalObject* globalObject)
 MapData::Entry* MapData::find(CallFrame* callFrame, KeyType key)
 {
     if (key.value.isString()) {
-        auto iter = m_stringKeyedTable.find(asString(key.value)->value(callFrame).impl());
+	    HashMap<StringImpl*, int, StringHash, HashTraits<StringImpl*>, WTF::UnsignedWithZeroKeyHashTraits<int>>::
+		    iterator iter = m_stringKeyedTable.find(asString(key.value)->value(callFrame).impl());
         if (iter == m_stringKeyedTable.end())
             return 0;
         return &m_entries[iter->value];
     }
-    auto iter = m_valueKeyedTable.find(JSValue::encode(key.value));
+	HashMap<long long, int, IntHash<long long>, EncodedJSValueHashTraits, WTF::UnsignedWithZeroKeyHashTraits<int>>::
+		iterator iter = m_valueKeyedTable.find(JSValue::encode(key.value));
     if (iter == m_valueKeyedTable.end())
         return 0;
     return &m_entries[iter->value];
@@ -112,13 +114,15 @@ bool MapData::remove(CallFrame* callFrame, KeyType key)
 {
     int32_t location;
     if (key.value.isString()) {
-        auto iter = m_stringKeyedTable.find(asString(key.value)->value(callFrame).impl());
+	    HashMap<StringImpl*, int, StringHash, HashTraits<StringImpl*>, WTF::UnsignedWithZeroKeyHashTraits<int>>::
+		    iterator iter = m_stringKeyedTable.find(asString(key.value)->value(callFrame).impl());
         if (iter == m_stringKeyedTable.end())
             return false;
         location = iter->value;
         m_stringKeyedTable.remove(iter);
     } else {
-        auto iter = m_valueKeyedTable.find(JSValue::encode(key.value));
+	    HashMap<long long, int, IntHash<long long>, EncodedJSValueHashTraits, WTF::UnsignedWithZeroKeyHashTraits<int>>::
+		    iterator iter = m_valueKeyedTable.find(JSValue::encode(key.value));
         if (iter == m_valueKeyedTable.end())
             return false;
         location = iter->value;
@@ -150,9 +154,11 @@ void MapData::replaceAndPackBackingStore(Entry* destination, int32_t newSize)
     }
 
     // Fixup for the hashmaps
-    for (auto ptr = m_valueKeyedTable.begin(); ptr != m_valueKeyedTable.end(); ++ptr)
+    for (HashMap<long long, int, IntHash<long long>, EncodedJSValueHashTraits, WTF::UnsignedWithZeroKeyHashTraits<int>>
+         ::iterator ptr = m_valueKeyedTable.begin(); ptr != m_valueKeyedTable.end(); ++ptr)
         ptr->value = m_entries[ptr->value].value.get().asInt32();
-    for (auto ptr = m_stringKeyedTable.begin(); ptr != m_stringKeyedTable.end(); ++ptr)
+    for (HashMap<StringImpl*, int, StringHash, HashTraits<StringImpl*>, WTF::UnsignedWithZeroKeyHashTraits<int>>::
+         iterator ptr = m_stringKeyedTable.begin(); ptr != m_stringKeyedTable.end(); ++ptr)
         ptr->value = m_entries[ptr->value].value.get().asInt32();
 
     ASSERT((m_size - newEnd) == m_deletedCount);

@@ -537,7 +537,8 @@ void FontCache::invalidate()
 
     Vector<Ref<FontSelector>> clients;
     clients.reserveInitialCapacity(gClients->size());
-    for (auto it = gClients->begin(), end = gClients->end(); it != end; ++it)
+    for (HashSet<FontSelector*, PtrHash<FontSelector*>, HashTraits<FontSelector*>>::iterator
+	         it = gClients->begin(), end = gClients->end(); it != end; ++it)
         clients.uncheckedAppend(**it);
 
     for (unsigned i = 0; i < clients.size(); ++i)

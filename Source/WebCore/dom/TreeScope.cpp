@@ -299,8 +299,9 @@ HTMLLabelElement* TreeScope::labelElementForId(const AtomicString& forAttributeV
         // Populate the map on first access.
         m_labelsByForAttribute = adoptPtr(new DocumentOrderedMap);
 
-        auto labelDescendants = descendantsOfType<HTMLLabelElement>(rootNode());
-        for (auto label = labelDescendants.begin(), end = labelDescendants.end(); label != end; ++label) {
+	    ElementDescendantIteratorAdapter<HTMLLabelElement> labelDescendants = descendantsOfType<HTMLLabelElement
+	    >(rootNode());
+        for (ElementDescendantIterator<HTMLLabelElement> label = labelDescendants.begin(), end = labelDescendants.end(); label != end; ++label) {
             const AtomicString& forValue = label->fastGetAttribute(forAttr);
             if (!forValue.isEmpty())
                 addLabel(forValue, &*label);
@@ -341,8 +342,9 @@ Element* TreeScope::findAnchor(const String& name)
         return 0;
     if (Element* element = getElementById(name))
         return element;
-    auto anchorDescendants = descendantsOfType<HTMLAnchorElement>(rootNode());
-    for (auto anchor = anchorDescendants.begin(), end = anchorDescendants.end(); anchor != end; ++anchor) {
+	ElementDescendantIteratorAdapter<HTMLAnchorElement> anchorDescendants = descendantsOfType<HTMLAnchorElement
+	>(rootNode());
+    for (ElementDescendantIterator<HTMLAnchorElement> anchor = anchorDescendants.begin(), end = anchorDescendants.end(); anchor != end; ++anchor) {
         if (rootNode()->document().inQuirksMode()) {
             // Quirks mode, case insensitive comparison of names.
             if (equalIgnoringCase(anchor->name(), name))

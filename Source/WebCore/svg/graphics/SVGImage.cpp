@@ -74,7 +74,8 @@ bool SVGImage::hasSingleSecurityOrigin() const
         return true;
 
     // Don't allow foreignObject elements since they can leak information with arbitrary HTML (like spellcheck or control theme).
-    auto foreignObjectDescendants = descendantsOfType<SVGForeignObjectElement>(rootElement);
+	ElementDescendantIteratorAdapter<SVGForeignObjectElement> foreignObjectDescendants = descendantsOfType<
+		SVGForeignObjectElement>(rootElement);
     if (foreignObjectDescendants.begin() != foreignObjectDescendants.end())
         return false;
 

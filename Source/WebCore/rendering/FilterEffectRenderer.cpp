@@ -159,8 +159,10 @@ PassRefPtr<FilterEffect> FilterEffectRenderer::buildReferenceFilter(RenderObject
     // This may need a spec clarification.
     RefPtr<SVGFilterBuilder> builder = SVGFilterBuilder::create(previousEffect, SourceAlpha::create(this));
 
-    auto attributesChildren = childrenOfType<SVGFilterPrimitiveStandardAttributes>(filter);
-    for (auto it = attributesChildren.begin(), end = attributesChildren.end(); it != end; ++it) {
+	ElementChildIteratorAdapter<SVGFilterPrimitiveStandardAttributes> attributesChildren = childrenOfType<
+		SVGFilterPrimitiveStandardAttributes>(filter);
+    for (ElementChildIterator<SVGFilterPrimitiveStandardAttributes>
+	         it = attributesChildren.begin(), end = attributesChildren.end(); it != end; ++it) {
         SVGFilterPrimitiveStandardAttributes* effectElement = &*it;
         effect = effectElement->build(builder.get(), this);
         if (!effect)

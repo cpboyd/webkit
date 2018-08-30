@@ -677,7 +677,8 @@ void Document::buildAccessKeyMap(TreeScope* scope)
 {
     ASSERT(scope);
     ContainerNode* rootNode = scope->rootNode();
-    for (auto element = elementDescendants(rootNode).begin(), end = elementDescendants(rootNode).end(); element != end; ++element) {
+    for (ElementDescendantIterator<Element> element = elementDescendants(rootNode).begin(), end =
+	                                            elementDescendants(rootNode).end(); element != end; ++element) {
         const AtomicString& accessKey = element->fastGetAttribute(accesskeyAttr);
         if (!accessKey.isEmpty())
             m_elementsByAccessKey.set(accessKey.impl(), &*element);
@@ -783,7 +784,7 @@ void Document::childrenChanged(const ChildChange& change)
 #endif
 
     Element* newDocumentElement = 0;
-    auto firstElementChild = elementChildren(this).begin();
+	ElementChildIterator<Element> firstElementChild = elementChildren(this).begin();
     if (firstElementChild != elementChildren(this).end())
         newDocumentElement = &*firstElementChild;
 
@@ -1574,7 +1575,7 @@ void Document::removeTitle(Element* titleElement)
 
     // Update title based on first title element in the head, if one exists.
     if (HTMLElement* headElement = head()) {
-        auto firstTitle = childrenOfType<HTMLTitleElement>(headElement).begin();
+	    ElementChildIterator<HTMLTitleElement> firstTitle = childrenOfType<HTMLTitleElement>(headElement).begin();
         if (firstTitle != childrenOfType<HTMLTitleElement>(headElement).end())
             setTitleElement(firstTitle->textWithDirection(), &*firstTitle);
     }
@@ -2658,8 +2659,10 @@ void Document::updateBaseURL()
     if (!equalIgnoringFragmentIdentifier(oldBaseURL, m_baseURL)) {
         // Base URL change changes any relative visited links.
         // FIXME: There are other URLs in the tree that would need to be re-evaluated on dynamic base URL change. Style should be invalidated too.
-        auto anchorDescendants = descendantsOfType<HTMLAnchorElement>(this);
-        for (auto anchor = anchorDescendants.begin(), end = anchorDescendants.end(); anchor != end; ++anchor)
+	    ElementDescendantIteratorAdapter<HTMLAnchorElement> anchorDescendants = descendantsOfType<HTMLAnchorElement
+	    >(this);
+        for (ElementDescendantIterator<HTMLAnchorElement>
+	             anchor = anchorDescendants.begin(), end = anchorDescendants.end(); anchor != end; ++anchor)
             anchor->invalidateCachedVisitedLinkHash();
     }
 }
@@ -2675,8 +2678,8 @@ void Document::processBaseElement()
     // Find the first href attribute in a base element and the first target attribute in a base element.
     const AtomicString* href = 0;
     const AtomicString* target = 0;
-    auto baseDescendants = descendantsOfType<HTMLBaseElement>(this);
-    for (auto base = baseDescendants.begin(), end = baseDescendants.end(); base != end && (!href || !target); ++base) {
+	ElementDescendantIteratorAdapter<HTMLBaseElement> baseDescendants = descendantsOfType<HTMLBaseElement>(this);
+    for (ElementDescendantIterator<HTMLBaseElement> base = baseDescendants.begin(), end = baseDescendants.end(); base != end && (!href || !target); ++base) {
         if (!href) {
             const AtomicString& value = base->fastGetAttribute(hrefAttr);
             if (!value.isNull())

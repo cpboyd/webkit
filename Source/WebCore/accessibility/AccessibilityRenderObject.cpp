@@ -2726,7 +2726,9 @@ void AccessibilityRenderObject::addImageMapChildren()
     if (!map)
         return;
 
-    for (auto area = descendantsOfType<HTMLAreaElement>(map).begin(), end = descendantsOfType<HTMLAreaElement>(map).end() ; area != end; ++area) {
+    for (ElementDescendantIterator<HTMLAreaElement>
+	         area = descendantsOfType<HTMLAreaElement>(map).begin(), end = descendantsOfType<HTMLAreaElement>(map).end()
+         ; area != end; ++area) {
         // add an <area> element for this child if it has a link
         if (!area->isLink())
             continue;

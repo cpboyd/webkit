@@ -40,7 +40,9 @@ SVGAnimatedProperty::~SVGAnimatedProperty()
 {
     // Remove wrapper from cache.
     Cache& cache = *animatedPropertyCache();
-    for (auto it = cache.begin(), end = cache.end(); it != end; ++it) {
+    for (HashMap<SVGAnimatedPropertyDescription, SVGAnimatedProperty*, SVGAnimatedPropertyDescriptionHash,
+                 SVGAnimatedPropertyDescriptionHashTraits, HashTraits<SVGAnimatedProperty*>>::iterator
+	         it = cache.begin(), end = cache.end(); it != end; ++it) {
         if (it->value == this) {
             cache.remove(it);
             break;

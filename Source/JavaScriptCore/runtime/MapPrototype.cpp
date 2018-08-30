@@ -115,14 +115,14 @@ EncodedJSValue JSC_HOST_CALL mapProtoFuncForEach(CallFrame* callFrame)
     if (callType == CallTypeJS) {
         JSFunction* function = jsCast<JSFunction*>(callBack);
         CachedCall cachedCall(callFrame, function, 2);
-        for (auto ptr = data->begin(), end = data->end(); ptr != end && !vm->exception(); ++ptr) {
+        for (MapData::const_iterator ptr = data->begin(), end = data->end(); ptr != end && !vm->exception(); ++ptr) {
             cachedCall.setThis(thisValue);
             cachedCall.setArgument(0, ptr.value());
             cachedCall.setArgument(1, ptr.key());
             cachedCall.call();
         }
     } else {
-        for (auto ptr = data->begin(), end = data->end(); ptr != end && !vm->exception(); ++ptr) {
+        for (MapData::const_iterator ptr = data->begin(), end = data->end(); ptr != end && !vm->exception(); ++ptr) {
             MarkedArgumentBuffer args;
             args.append(ptr.value());
             args.append(ptr.key());

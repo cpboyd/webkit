@@ -223,8 +223,9 @@ void SMILTimeContainer::updateDocumentOrderIndexes()
 {
     unsigned timingElementCount = 0;
 
-    auto smilDescendants = descendantsOfType<SVGSMILElement>(m_ownerSVGElement);
-    for (auto smilElement = smilDescendants.begin(), end = smilDescendants.end(); smilElement != end; ++smilElement)
+	ElementDescendantIteratorAdapter<SVGSMILElement> smilDescendants = descendantsOfType<SVGSMILElement>(
+		m_ownerSVGElement);
+    for (ElementDescendantIterator<SVGSMILElement> smilElement = smilDescendants.begin(), end = smilDescendants.end(); smilElement != end; ++smilElement)
         smilElement->setDocumentOrderIndex(timingElementCount++);
 
     m_documentOrderIndexesDirty = false;

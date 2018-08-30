@@ -978,8 +978,9 @@ Element* AccessibilityNodeObject::mouseButtonListener() const
 
     // check if our parent is a mouse button listener
     // FIXME: Do the continuation search like anchorElement does
-    auto lineage = elementLineage(node->isElementNode() ? toElement(node) : node->parentElement());
-    for (auto element = lineage.begin(), end = lineage.end(); element != end; ++element) {
+	ElementAncestorIteratorAdapter<Element> lineage = elementLineage(
+		node->isElementNode() ? toElement(node) : node->parentElement());
+    for (ElementAncestorIterator<Element> element = lineage.begin(), end = lineage.end(); element != end; ++element) {
         // If we've reached the body and this is not a control element, do not expose press action for this element.
         // It can cause false positives, where every piece of text is labeled as accepting press actions. 
         if (element->hasTagName(bodyTag) && isStaticText())
@@ -1094,8 +1095,8 @@ HTMLLabelElement* AccessibilityNodeObject::labelForElement(Element* element) con
             return label;
     }
 
-    auto labelAncestors = ancestorsOfType<HTMLLabelElement>(element);
-    auto enclosingLabel = labelAncestors.begin();
+	ElementAncestorIteratorAdapter<HTMLLabelElement> labelAncestors = ancestorsOfType<HTMLLabelElement>(element);
+	ElementAncestorIterator<HTMLLabelElement> enclosingLabel = labelAncestors.begin();
     return enclosingLabel != labelAncestors.end() ? &*enclosingLabel : nullptr;
 }
 
@@ -1117,7 +1118,7 @@ static Element* siblingWithAriaRole(String role, Node* node)
     ContainerNode* parent = node->parentNode();
     if (!parent)
         return 0;
-    for (auto sibling = elementChildren(parent).begin(), end = elementChildren(parent).end(); sibling != end; ++sibling) {
+    for (ElementChildIterator<Element> sibling = elementChildren(parent).begin(), end = elementChildren(parent).end(); sibling != end; ++sibling) {
         const AtomicString& siblingAriaRole = sibling->fastGetAttribute(roleAttr);
         if (equalIgnoringCase(siblingAriaRole, role))
             return &*sibling;

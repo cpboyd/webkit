@@ -139,8 +139,9 @@ PassRefPtr<SimpleFontData> CSSFontFaceSource::getFontData(const FontDescription&
                 if (!m_externalSVGFontElement)
                     return 0;
 
-                auto fontFaceChildren = childrenOfType<SVGFontFaceElement>(m_externalSVGFontElement.get());
-                auto firstFontFace = fontFaceChildren.begin();
+	            ElementChildIteratorAdapter<SVGFontFaceElement> fontFaceChildren = childrenOfType<SVGFontFaceElement>(
+		            m_externalSVGFontElement.get());
+	            ElementChildIterator<SVGFontFaceElement> firstFontFace = fontFaceChildren.begin();
                 if (firstFontFace != fontFaceChildren.end()) {
                     if (!m_svgFontFaceElement) {
                         // We're created using a CSS @font-face rule, that means we're not associated with a SVGFontFaceElement.

@@ -51,8 +51,10 @@ PassRefPtr<HTMLFieldSetElement> HTMLFieldSetElement::create(const QualifiedName&
 
 void HTMLFieldSetElement::invalidateDisabledStateUnder(Element* base)
 {
-    auto formControlDescendants = descendantsOfType<HTMLFormControlElement>(base);
-    for (auto control = formControlDescendants.begin(), end = formControlDescendants.end(); control != end; ++control)
+	ElementDescendantIteratorAdapter<HTMLFormControlElement> formControlDescendants = descendantsOfType<
+		HTMLFormControlElement>(base);
+    for (ElementDescendantIterator<HTMLFormControlElement>
+	         control = formControlDescendants.begin(), end = formControlDescendants.end(); control != end; ++control)
         control->ancestorDisabledStateWasChanged();
 }
 
@@ -67,8 +69,8 @@ void HTMLFieldSetElement::childrenChanged(const ChildChange& change)
 {
     HTMLFormControlElement::childrenChanged(change);
 
-    auto legendChildren = childrenOfType<HTMLLegendElement>(this);
-    for (auto legend = legendChildren.begin(), end = legendChildren.end(); legend != end; ++legend)
+	ElementChildIteratorAdapter<HTMLLegendElement> legendChildren = childrenOfType<HTMLLegendElement>(this);
+    for (ElementChildIterator<HTMLLegendElement> legend = legendChildren.begin(), end = legendChildren.end(); legend != end; ++legend)
         invalidateDisabledStateUnder(&*legend);
 }
 
@@ -90,8 +92,9 @@ RenderObject* HTMLFieldSetElement::createRenderer(RenderArena* arena, RenderStyl
 
 const HTMLLegendElement* HTMLFieldSetElement::legend() const
 {
-    auto legendDescendants = descendantsOfType<HTMLLegendElement>(this);
-    auto firstLegend = legendDescendants.begin();
+	ElementDescendantConstIteratorAdapter<HTMLLegendElement> legendDescendants = descendantsOfType<HTMLLegendElement
+	>(this);
+	ElementDescendantConstIterator<HTMLLegendElement> firstLegend = legendDescendants.begin();
     if (firstLegend != legendDescendants.end())
         return &*firstLegend;
     return nullptr;

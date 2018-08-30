@@ -2375,8 +2375,10 @@ size_t Node::numberOfScopedHTMLStyleChildren() const
     if (!isContainerNode())
         return 0;
     size_t count = 0;
-    auto styleDescendants = descendantsOfType<HTMLStyleElement>(toContainerNode(this));
-    for (auto style = styleDescendants.begin(), end = styleDescendants.end(); style != end; ++style) {
+	ElementDescendantConstIteratorAdapter<HTMLStyleElement> styleDescendants = descendantsOfType<HTMLStyleElement>(
+		toContainerNode(this));
+    for (ElementDescendantConstIterator<HTMLStyleElement> style = styleDescendants.begin(), end = styleDescendants.end()
+         ; style != end; ++style) {
         if (style->isRegisteredAsScoped())
             count++;
     }

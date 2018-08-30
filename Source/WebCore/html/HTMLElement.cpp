@@ -892,8 +892,8 @@ void HTMLElement::adjustDirectionalityIfNeededAfterChildAttributeChanged(Element
     setHasDirAutoFlagRecursively(child, false);
     if (!renderer() || !renderer()->style() || renderer()->style()->direction() == textDirection)
         return;
-    auto lineage = elementLineage(this);
-    for (auto elementToAdjust = lineage.begin(), end = lineage.end(); elementToAdjust != end; ++elementToAdjust) {
+	ElementAncestorIteratorAdapter<Element> lineage = elementLineage(this);
+    for (ElementAncestorIterator<Element> elementToAdjust = lineage.begin(), end = lineage.end(); elementToAdjust != end; ++elementToAdjust) {
         if (elementAffectsDirectionality(&*elementToAdjust)) {
             elementToAdjust->setNeedsStyleRecalc();
             return;
@@ -935,8 +935,8 @@ void HTMLElement::adjustDirectionalityIfNeededAfterChildrenChanged(Element* befo
     if (oldMarkedNode)
         setHasDirAutoFlagRecursively(oldMarkedNode, false);
 
-    auto lineage = lineageOfType<HTMLElement>(this);
-    for (auto elementToAdjust = lineage.begin(), end = lineage.end(); elementToAdjust != end; ++elementToAdjust) {
+	ElementAncestorIteratorAdapter<HTMLElement> lineage = lineageOfType<HTMLElement>(this);
+    for (ElementAncestorIterator<HTMLElement> elementToAdjust = lineage.begin(), end = lineage.end(); elementToAdjust != end; ++elementToAdjust) {
         if (elementAffectsDirectionality(&*elementToAdjust)) {
             elementToAdjust->calculateAndAdjustDirectionality();
             return;

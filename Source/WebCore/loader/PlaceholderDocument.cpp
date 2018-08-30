@@ -34,8 +34,8 @@ void PlaceholderDocument::createRenderTree()
 {
     ASSERT(!attached());
 
-    auto children = elementChildren(this);
-    for (auto child = children.begin(), end = children.end(); child != end; ++child)
+	ElementChildIteratorAdapter<Element> children = elementChildren(this);
+    for (ElementChildIterator<Element> child = children.begin(), end = children.end(); child != end; ++child)
         Style::attachRenderTree(*child);
 
     setAttached(true);

@@ -88,7 +88,9 @@ void ImageQualityController::highQualityRepaintTimerFired(Timer<ImageQualityCont
         return;
     }
 
-    for (auto it = m_objectLayerSizeMap.begin(), end = m_objectLayerSizeMap.end(); it != end; ++it)
+    for (HashMap<RenderBoxModelObject*, HashMap<const void*, LayoutSize>, PtrHash<RenderBoxModelObject*>, HashTraits<
+	                 RenderBoxModelObject*>, HashTraits<HashMap<const void*, LayoutSize>>>::iterator
+	         it = m_objectLayerSizeMap.begin(), end = m_objectLayerSizeMap.end(); it != end; ++it)
         it->key->repaint();
 
     m_liveResizeOptimizationIsActive = false;
@@ -121,7 +123,9 @@ bool ImageQualityController::shouldPaintAtLowQuality(GraphicsContext* context, R
     IntSize imageSize(image->width(), image->height());
 
     // Look ourselves up in the hashtables.
-    auto i = m_objectLayerSizeMap.find(object);
+	HashMap<RenderBoxModelObject*, HashMap<const void*, LayoutSize>, PtrHash<RenderBoxModelObject*>, HashTraits<
+		        RenderBoxModelObject*>, HashTraits<HashMap<const void*, LayoutSize>>>::iterator i = m_objectLayerSizeMap
+		.find(object);
     LayerSizeMap* innerMap = i != m_objectLayerSizeMap.end() ? &i->value : 0;
     LayoutSize oldSize;
     bool isFirstResize = true;

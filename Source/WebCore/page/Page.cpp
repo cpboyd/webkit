@@ -101,7 +101,7 @@ static void networkStateChanged(bool isOnLine)
     Vector<Ref<Frame>> frames;
     
     // Get all the frames of all the pages in all the page groups
-    for (auto it = allPages->begin(), end = allPages->end(); it != end; ++it) {
+    for (HashSet<Page*, PtrHash<Page*>, HashTraits<Page*>>::iterator it = allPages->begin(), end = allPages->end(); it != end; ++it) {
         for (Frame* frame = &(*it)->mainFrame(); frame; frame = frame->tree().traverseNext())
             frames.append(*frame);
         InspectorInstrumentation::networkStateChanged(*it);
@@ -493,7 +493,7 @@ void Page::refreshPlugins(bool reload)
 
     Vector<Ref<Frame>> framesNeedingReload;
 
-    for (auto it = allPages->begin(), end = allPages->end(); it != end; ++it) {
+    for (HashSet<Page*, PtrHash<Page*>, HashTraits<Page*>>::iterator it = allPages->begin(), end = allPages->end(); it != end; ++it) {
         Page& page = **it;
         page.m_pluginData.clear();
 
@@ -1187,10 +1187,11 @@ Vector<Ref<PluginViewBase>> Page::pluginViews()
         if (!view)
             break;
 
-        auto children = view->children();
+	    const HashSet<RefPtr<Widget>>* children = view->children();
         ASSERT(children);
 
-        for (auto it = children->begin(), end = children->end(); it != end; ++it) {
+        for (HashSet<RefPtr<Widget>, PtrHash<RefPtr<Widget>>, HashTraits<RefPtr<Widget>>>::iterator
+	             it = children->begin(), end = children->end(); it != end; ++it) {
             Widget* widget = (*it).get();
             if (widget->isPluginViewBase())
                 views.append(*toPluginViewBase(widget));
@@ -1207,7 +1208,7 @@ void Page::storageBlockingStateChanged()
 
     // Collect the PluginViews in to a vector to ensure that action the plug-in takes
     // from below storageBlockingStateChanged does not affect their lifetime.
-    auto views = pluginViews();
+	Vector<Ref<PluginViewBase>> views = pluginViews();
 
     for (unsigned i = 0; i < views.size(); ++i)
         views[i]->storageBlockingStateChanged();
@@ -1222,7 +1223,7 @@ void Page::privateBrowsingStateChanged()
 
     // Collect the PluginViews in to a vector to ensure that action the plug-in takes
     // from below privateBrowsingStateChanged does not affect their lifetime.
-    auto views = pluginViews();
+	Vector<Ref<PluginViewBase>> views = pluginViews();
 
     for (unsigned i = 0; i < views.size(); ++i)
         views[i]->privateBrowsingStateChanged(privateBrowsingEnabled);

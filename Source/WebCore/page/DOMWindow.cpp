@@ -234,7 +234,8 @@ bool DOMWindow::dispatchAllPendingBeforeUnloadEvents()
 
     Vector<Ref<DOMWindow>> windows;
     windows.reserveInitialCapacity(set.size());
-    for (auto it = set.begin(), end = set.end(); it != end; ++it)
+    for (HashCountedSet<DOMWindow*, PtrHash<DOMWindow*>, HashTraits<DOMWindow*>>::iterator
+	         it = set.begin(), end = set.end(); it != end; ++it)
         windows.uncheckedAppend(*it->key);
 
     for (unsigned i = 0; i < windows.size(); ++i) {
@@ -274,7 +275,8 @@ void DOMWindow::dispatchAllPendingUnloadEvents()
 
     Vector<Ref<DOMWindow>> windows;
     windows.reserveInitialCapacity(set.size());
-    for (auto it = set.begin(), end = set.end(); it != end; ++it)
+    for (HashCountedSet<DOMWindow*, PtrHash<DOMWindow*>, HashTraits<DOMWindow*>>::iterator
+	         it = set.begin(), end = set.end(); it != end; ++it)
         windows.uncheckedAppend(*it->key);
 
     for (unsigned i = 0; i < windows.size(); ++i) {

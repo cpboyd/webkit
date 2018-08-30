@@ -49,15 +49,16 @@ PassRefPtr<HTMLLegendElement> HTMLLegendElement::create(const QualifiedName& tag
 HTMLFormControlElement* HTMLLegendElement::associatedControl()
 {
     // Check if there's a fieldset belonging to this legend.
-    auto fieldsetAncestors = ancestorsOfType<HTMLFieldSetElement>(this);
-    auto enclosingFieldset = fieldsetAncestors.begin();
+	ElementAncestorIteratorAdapter<HTMLFieldSetElement> fieldsetAncestors = ancestorsOfType<HTMLFieldSetElement>(this);
+	ElementAncestorIterator<HTMLFieldSetElement> enclosingFieldset = fieldsetAncestors.begin();
     if (enclosingFieldset == fieldsetAncestors.end())
         return 0;
 
     // Find first form element inside the fieldset that is not a legend element.
     // FIXME: Should we consider tabindex?
-    auto fieldsetFormControlDescendants = descendantsOfType<HTMLFormControlElement>(&*enclosingFieldset);
-    auto firstFormControl = fieldsetFormControlDescendants.begin();
+	ElementDescendantIteratorAdapter<HTMLFormControlElement> fieldsetFormControlDescendants = descendantsOfType<
+		HTMLFormControlElement>(&*enclosingFieldset);
+	ElementDescendantIterator<HTMLFormControlElement> firstFormControl = fieldsetFormControlDescendants.begin();
     return firstFormControl != fieldsetFormControlDescendants.end() ? &*firstFormControl : nullptr;
 }
 
