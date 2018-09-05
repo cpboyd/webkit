@@ -28,6 +28,7 @@
 #include <wtf/CompilationThread.h>
 #include <wtf/Forward.h>
 #include <wtf/MathExtras.h>
+#include <wtf/PassOwnPtr.h>
 #include <wtf/StdLibExtras.h>
 #include <wtf/StringHasher.h>
 #include <wtf/Vector.h>

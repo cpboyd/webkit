@@ -48,6 +48,7 @@ list(APPEND WebCore_SOURCES
     platform/win/LocalizedStringsWin.cpp
     platform/win/MIMETypeRegistryWin.cpp
     platform/win/PasteboardWin.cpp
+    platform/win/PathWalker.cpp
     platform/win/PopupMenuWin.cpp
     platform/win/PlatformMouseEventWin.cpp
     platform/win/PlatformScreenWin.cpp

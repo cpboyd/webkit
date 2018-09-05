@@ -19,6 +19,7 @@
  */
 
 #include "config.h"
+#include <runtime/TypedArrayInlines.h>
 #include "ImageBuffer.h"
 
 #include "GraphicsContext.h"

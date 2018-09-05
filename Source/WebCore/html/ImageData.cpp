@@ -27,6 +27,7 @@
  */
 
 #include "config.h"
+#include <runtime/TypedArrayInlines.h>
 #include "ImageData.h"
 
 namespace WebCore {
